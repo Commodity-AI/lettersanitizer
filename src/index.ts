@@ -3,6 +3,7 @@ import {
   allowedCssProperties as defaultAllowedCssProperties,
   removeWithContents,
 } from './constants.js';
+import { JSDOM } from 'jsdom';
 
 export interface SanitizerOptions {
   /**
@@ -155,7 +156,8 @@ function sanitizeHtml(
   }: SanitizerOptions,
 ): string {
   if (noWrapper) id = '';
-  const doc = new DOMParser().parseFromString(input, 'text/html');
+  const dom = new JSDOM(input);
+  const doc = dom.window.document;
 
   // Ensure allowed schemas are lower case.
   allowedSchemas = Array.isArray(allowedSchemas)
